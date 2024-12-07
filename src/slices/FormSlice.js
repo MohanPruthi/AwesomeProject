@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     loading: false,
-    list: null,
+    list: [],
     editing: false,
   };
 
@@ -14,7 +14,7 @@ const initialState = {
           setLoading(state, value) {
               state.loading = value.payload;
           },
-          setList(state, value){ 
+          setList(state, value){            // todo make addtolist 
               state.list = value.payload;
           },
           setEditing: (state, action) => {

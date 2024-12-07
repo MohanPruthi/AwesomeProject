@@ -4,6 +4,8 @@ import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
 import Slider from '@react-native-community/slider';
 import CheckBox from '@react-native-community/checkbox';
+import { useSelector, useDispatch } from 'react-redux';
+import { setList } from '../../slices/FormSlice';
 
 
 const FeedbackSchema = Yup.object().shape({
@@ -72,6 +74,18 @@ const FeedbackSchema = Yup.object().shape({
 
 
 const FeedbackFrom = () => {
+
+    const dispatch = useDispatch()
+    const {editing} = useSelector((state)=>state.form)
+
+    const onSubmit = (values) => {
+        console.log(".....")
+        console.log(values)
+        dispatch(setList(values))
+        // navigate to list
+        console.log(".....")
+    }
+
     return (
         <ScrollView>
             <Text>Form..xx.</Text>
@@ -88,8 +102,6 @@ const FeedbackFrom = () => {
                 collaborationAspects: [],
                 challengesFaced: '',
                 challengesDescription: '',
-                toolsSufficient: '',
-                usefulTools: [],
                 timeManagement: 5,
                 delayDescription: '',
                 projectObjectiveAchieved: '',
@@ -113,7 +125,7 @@ const FeedbackFrom = () => {
                 setFieldValue}) => (
                     <View style={styles.container}>
                         {/* Personal Information */}
-                        <Text>First Name</Text>
+                        <Text style={styles.label}>First Name</Text>
                         <TextInput
                             style={styles.input}
                             onChangeText={handleChange('firstName')}
@@ -124,7 +136,7 @@ const FeedbackFrom = () => {
                             <Text style={styles.error}>{errors.firstName}</Text>
                         )}
 
-                        <Text>Last Name</Text>
+                        <Text style={styles.label}>Last Name</Text>
                         <TextInput
                             style={styles.input}
                             onChangeText={handleChange('lastName')}
@@ -135,7 +147,7 @@ const FeedbackFrom = () => {
                             <Text style={styles.error}>{errors.lastName}</Text>
                         )}
 
-                        <Text>Email</Text>
+                        <Text style={styles.label}>Email</Text>
                         <TextInput
                             style={styles.input}
                             onChangeText={handleChange('email')}
@@ -146,7 +158,7 @@ const FeedbackFrom = () => {
                             <Text style={styles.error}>{errors.email}</Text>
                         )}
 
-                        <Text>Phone Number</Text>
+                        <Text style={styles.label}>Phone Number</Text>
                         <TextInput
                             style={styles.input}
                             keyboardType="numeric"
@@ -159,7 +171,7 @@ const FeedbackFrom = () => {
                         )}
 
                         {/* Employee Type (Radio buttons) */}
-                        <Text>Employee Type</Text>
+                        <Text style={styles.label}>Employee Type</Text>
                         {['Intern', 'Manager', 'Lead', 'SDE'].map((type) => (
                             <TouchableOpacity
                             key={type}
@@ -173,7 +185,7 @@ const FeedbackFrom = () => {
                         )}
 
                         {/* Project Name (Dropdown/Select) */}
-                        <Text>Project Name</Text>
+                        <Text style={styles.label}>Project Name</Text>
                         <TextInput
                             style={styles.input}
                             onChangeText={handleChange('projectName')}
@@ -185,7 +197,7 @@ const FeedbackFrom = () => {
                         )}
 
                         {/* Team Collaboration (Radio buttons) */}
-                        <Text>Team Collaboration</Text>
+                        <Text style={styles.label}>Team Collaboration</Text>
                         {['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied'].map(
                             (option) => (
                             <TouchableOpacity
@@ -201,8 +213,8 @@ const FeedbackFrom = () => {
                         )}
 
                         {/* Collaboration Aspects (Checkboxes) */}
-                        <Text>Collaboration Aspects</Text>
-                        {['Communication', 'Support', 'Task Distribution'].map((aspect) => (
+                        <Text style={styles.label}>Collaboration Aspects</Text>
+                        {/* {['Communication', 'Support', 'Task Distribution'].map((aspect) => (
                             <View key={aspect}>
                             <CheckBox
                                 value={values.collaborationAspects.includes(aspect)}
@@ -218,10 +230,10 @@ const FeedbackFrom = () => {
                         ))}
                         {touched.collaborationAspects && errors.collaborationAspects && (
                             <Text style={styles.error}>{errors.collaborationAspects}</Text>
-                        )}
+                        )} */}
 
                         {/* Challenges Faced (Radio buttons) */}
-                        <Text>Challenges Faced</Text>
+                        <Text style={styles.label}>Challenges Faced</Text>
                         {['Yes', 'No'].map((choice) => (
                             <TouchableOpacity
                             key={choice}
@@ -236,7 +248,7 @@ const FeedbackFrom = () => {
 
                         {values.challengesFaced === 'Yes' && (
                             <>
-                            <Text>Challenges Description</Text>
+                            <Text style={styles.label}>Challenges Description</Text>
                             <TextInput
                                 style={styles.input}
                                 onChangeText={handleChange('challengesDescription')}
@@ -250,7 +262,7 @@ const FeedbackFrom = () => {
                         )}
 
                         {/* Time Management (Slider) */}
-                        <Text>Time Management (Rating 1-10)</Text>
+                        <Text style={styles.label}>Time Management (Rating 1-10)</Text>
                         <Slider
                             minimumValue={1}
                             maximumValue={10}
@@ -264,7 +276,7 @@ const FeedbackFrom = () => {
                         <Text>Rating: {values.timeManagement}</Text>
 
                         {/* Project Objective Achieved (Radio buttons) */}
-                        <Text>Project Objective Achieved</Text>
+                        <Text style={styles.label}>Project Objective Achieved</Text>
                         {['Yes', 'Partially', 'No'].map((choice) => (
                             <TouchableOpacity
                             key={choice}
@@ -275,7 +287,7 @@ const FeedbackFrom = () => {
                         ))}
 
                         {/* Overall Experience (Slider) */}
-                        <Text>Overall Experience (Rating 1-10)</Text>
+                        <Text style={styles.label}>Overall Experience (Rating 1-10)</Text>
                         <Slider
                             minimumValue={1}
                             maximumValue={10}
@@ -286,7 +298,7 @@ const FeedbackFrom = () => {
                         <Text>Rating: {values.overallExperience}</Text>
 
                         {/* Final Comments */}
-                        <Text>Additional Feedback</Text>
+                        <Text style={styles.label}>Additional Feedback</Text>
                         <TextInput
                             style={styles.input}
                             onChangeText={handleChange('additionalFeedback')}
@@ -299,10 +311,11 @@ const FeedbackFrom = () => {
 
                         {/* Submit Button */}
                         <Button
+                            style={styles.button}
                             title="Submit"
                             onPress={()=> {
                                 handleSubmit()
-                                // onSubmit(values)
+                                onSubmit(values)
                             }}
                             disabled={!isValid}
                         />
@@ -315,57 +328,67 @@ const FeedbackFrom = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'white',
+      flex: 1,
+      backgroundColor: '#f9f9f9', // Softer background color for better contrast
+      padding: 16, // Add padding for better spacing
     },
     input: {
-      height: "auto",
-      borderColor: '#ccc',
+      height: 48, // Consistent height for inputs
+      borderColor: '#ddd', // Subtle border color
       borderWidth: 1,
-      borderRadius: 4,
-      marginBottom: 12,
-      paddingLeft: 8,
-      fontSize: 26,
+      borderRadius: 8, // Slightly rounded corners for modern design
+      marginBottom: 16, // Uniform spacing between inputs
+      paddingHorizontal: 12, // Comfortable padding inside the input
+      fontSize: 16, // Standard font size for readability
+      backgroundColor: 'white', // White background for input fields
     },
     label: {
-      fontSize: 26,
-      fontWeight: 'bold',
-      marginBottom: 6,
+      fontSize: 18, // Larger font size for clear labeling
+      fontWeight: '600', // Slightly less bold for a cleaner look
+      marginBottom: 8, // Proper spacing below labels
+      color: '#333', // Darker text for better readability
     },
     error: {
-      color: 'red',
-      fontSize: 12,
-      marginBottom: 8,
+      color: '#e74c3c', // Slightly darker red for better visibility
+      fontSize: 14, // Readable font size for error messages
+      marginBottom: 12, // Clear separation below error messages
     },
     radioOption: {
       fontSize: 16,
-      marginBottom: 6,
+      color: '#555', // Softer text color for secondary options
+      marginBottom: 8, // Better spacing for radio options
     },
     radioGroup: {
-      marginBottom: 12,
+      marginBottom: 16, // Proper spacing below radio groups
     },
     checkbox: {
-      marginBottom: 6,
+      flexDirection: 'row', // Align checkbox and text horizontally
+      alignItems: 'center',
+      marginBottom: 8, // Consistent spacing between checkboxes
     },
     checkboxText: {
       fontSize: 16,
-      marginBottom: 6,
+      color: '#555', // Consistent text color with other secondary text
+      marginLeft: 8, // Space between checkbox and text
     },
     sliderText: {
       fontSize: 16,
-      marginBottom: 8,
+      color: '#555', // Consistent secondary text color
+      marginBottom: 12, // Spacing below slider labels
     },
     button: {
-      backgroundColor: '#2196F3',
-      padding: 10,
-      borderRadius: 4,
+      backgroundColor: '#007BFF', // More vibrant blue for primary action
+      paddingVertical: 14, // Larger padding for better touch target
+      borderRadius: 8, // Rounded corners for modern design
       alignItems: 'center',
+      marginTop: 16, // Spacing above the button
     },
     buttonText: {
       color: 'white',
-      fontSize: 16,
+      fontSize: 18, // Slightly larger font size for emphasis
       fontWeight: 'bold',
     },
   });
+  
 
 export default FeedbackFrom;

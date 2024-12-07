@@ -112,6 +112,8 @@ dependencies {
     implementation("com.facebook.react:react-android")
 
     implementation project(':react-native-vector-icons')
+    implementation project(':react-native-sqlite-storage')
+
 
 
     if (hermesEnabled.toBoolean()) {
