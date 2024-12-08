@@ -1,15 +1,25 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
+import {removeFromList} from '../../slices/FormSlice'
+import { useDispatch } from 'react-redux';
+import {removeItemFromTable, connectToDatabase} from '../../db/db'
 
-const ListCard = ({item}) => {
+const ListCard = ({item, index}) => {
+  const dispatch = useDispatch();
   const handleEdit = id => {
     console.log(`Editing item with id: ${id}`);
     // Implement the edit functionality here
   };
 
-  const handleDelete = id => {
-    console.log(`Deleting item with id: ${id}`);
-    // Implement the delete functionality here
+  const handleDelete = async(id) => {
+    console.log(`Deleting item with id: ${id}`)
+    // delete from sqlite
+    const db = await connectToDatabase();
+    await removeItemFromTable(db, id)
+
+
+    // delete from redux
+    dispatch(removeFromList({id}))
   };
 
   return (
@@ -39,12 +49,12 @@ const ListCard = ({item}) => {
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
           style={styles.editButton}
-          onPress={() => handleEdit(item.id)}>
+          onPress={() => handleEdit(index)}>
           <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}>
+          onPress={() => handleDelete(index)}>
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
@@ -55,57 +65,65 @@ const ListCard = ({item}) => {
 export default ListCard;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f4f4f4',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 16,
-    marginVertical: 10,
+    backgroundColor: '#1e1e1e',
+    borderRadius: 10,
+    padding: 20,
+    marginVertical: 12,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
     elevation: 4,
+    borderWidth: 2,
+    borderColor: '#333',
+    height: 300,
+    width: 350,
+    justifyContent: 'center'
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontSize: 20,
+    fontWeight: '600',
+    marginBottom: 10,
+    color: '#f1f1f1', // Light text for readability
   },
   cardText: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: '#333',
+    fontSize: 16,
+    marginBottom: 8,
+    color: '#d3d3d3', // Softer light gray for text
+    lineHeight: 20,
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 12,
+    marginTop: 16,
   },
   editButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 4,
+    backgroundColor: '#27ae60', // Muted green for edit button
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    shadowColor: '#27ae60',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+    elevation: 2,
   },
   deleteButton: {
-    backgroundColor: '#F44336',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 4,
+    backgroundColor: '#c0392b', // Muted red for delete button
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    shadowColor: '#c0392b',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+    elevation: 2,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 14,
+    color: '#f1f1f1', // Consistent light color for button text
+    fontSize: 16,
+    fontWeight: '500',
+    textAlign: 'center',
   },
 });

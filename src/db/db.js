@@ -42,17 +42,19 @@ export const removeTable = async (db, tableName) => {
   }
 };
 
-export const removeItemFromTable = async (db, tableName, itemId) => {
-  const query = `DELETE FROM ${tableName} WHERE id = ?`;
+export const removeItemFromTable = async (db, id) => {        //todo
+  const query = `DELETE FROM feedback WHERE id = ?`;
   try {
-    // Execute the delete query with the provided itemId
-    await db.executeSql(query, [itemId]);
-    console.log(`Item with id ${itemId} deleted successfully`);
+    await db.executeSql(query, [id]);
+    console.log(`Feedback item with id ${id} removed successfully.`);
   } catch (error) {
-    console.error('Error deleting item:', error);
-    throw Error(`Failed to delete item with id ${itemId} from ${tableName}`);
+    console.error(`Failed to remove feedback item with id ${id}:`, error);
+    throw Error(`Failed to remove feedback item with id ${id}`);
   }
 };
+
+
+
 
 // Function to create the feedback table if it doesn't exist
 export const createTable = async db => {

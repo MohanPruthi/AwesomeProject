@@ -11,16 +11,15 @@ import {
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSelector, useDispatch} from 'react-redux';
-import {setList} from '../../slices/FormSlice';
+import {addToList, setList} from '../../slices/FormSlice';
 import {Slider, CheckBox} from '@rneui/themed';
-import {connectToDatabase, createTable, insertFeedback} from '../../db/db';
+import {connectToDatabase, createTable, insertFeedback, getFeedback} from '../../db/db';
 import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icon set
 
 const FeedbackSchema = Yup.object().shape({
-  // Personal Information
   firstName: Yup.string()
     .required('First name is required')
-    .matches(/^[a-zA-Z\s]+$/, 'First name must only contain letters'),
+    .min(2, "Too short"),
   lastName: Yup.string()
     .required('Last name is required')
     .matches(/^[a-zA-Z\s]+$/, 'Last name must only contain letters'),
@@ -90,11 +89,12 @@ const FeedbackSchema = Yup.object().shape({
 
 const FeedbackFrom = () => {
   const dispatch = useDispatch();
-  const {editing, list} = useSelector(state => state.form);
+  const {editing} = useSelector(state => state.form);
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
+
     console.log(values, 'value');
-    dispatch(setList(values));
+
     // navigate to list
     const saveFeedback = async () => {
       const db = await connectToDatabase();
@@ -110,6 +110,9 @@ const FeedbackFrom = () => {
     saveFeedback().catch(error => {
       console.error('Error saving feedback:', error);
     });
+
+    dispatch(addToList(values));        // push to redux array
+
 
     setList({
       firstName: '',
@@ -261,6 +264,7 @@ const FeedbackFrom = () => {
             <Text style={styles.label}>Collaboration Aspects</Text>
             {['Communication', 'Support', 'Task Distribution'].map(aspect => (
               <CheckBox
+                key = {aspect}               
                 center
                 title={`${aspect}`}
                 iconType="material-community"
@@ -316,8 +320,8 @@ const FeedbackFrom = () => {
             {/* Time Management (Slider) */}
             <Text style={styles.label}>Time Management (Rating 1-10)</Text>
             <Slider
-              minimumValue={1}
-              maximumValue={10}
+              minimumValue={0}
+              maximumValue={5}
               step={1}
               value={values.timeManagement}
               minimumTrackTintColor="#1EB1FC"
@@ -346,10 +350,10 @@ const FeedbackFrom = () => {
             ))}
 
             {/* Overall Experience (Slider) */}
-            <Text style={styles.label}>Overall Experience (Rating 1-10)</Text>
+            <Text style={styles.label}>Overall Experience</Text>
             <Slider
-              minimumValue={1}
-              maximumValue={10}
+              minimumValue={0}
+              maximumValue={5}
               step={1}
               value={values.overallExperience}
               minimumTrackTintColor="#1EB1FC"
@@ -399,67 +403,59 @@ const FeedbackFrom = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9f9f9', // Softer background color for better contrast
-    padding: 16, // Add padding for better spacing
-  },
-  input: {
-    height: 48, // Consistent height for inputs
-    borderColor: '#ddd', // Subtle border color
-    borderWidth: 1,
-    borderRadius: 8, // Slightly rounded corners for modern design
-    marginBottom: 16, // Uniform spacing between inputs
-    paddingHorizontal: 12, // Comfortable padding inside the input
-    fontSize: 16, // Standard font size for readability
-    backgroundColor: 'white', // White background for input fields
-  },
-  label: {
-    fontSize: 18, // Larger font size for clear labeling
-    fontWeight: '600', // Slightly less bold for a cleaner look
-    marginBottom: 8, // Proper spacing below labels
-    color: '#333', // Darker text for better readability
-  },
-  error: {
-    color: '#e74c3c', // Slightly darker red for better visibility
-    fontSize: 14, // Readable font size for error messages
-    marginBottom: 12, // Clear separation below error messages
-  },
-  radioOption: {
-    fontSize: 16,
-    color: '#555', // Softer text color for secondary options
-    marginBottom: 8, // Better spacing for radio options
-  },
-  radioGroup: {
-    marginBottom: 16, // Proper spacing below radio groups
-  },
-  checkbox: {
-    flexDirection: 'row', // Align checkbox and text horizontally
-    alignItems: 'center',
-    marginBottom: 8, // Consistent spacing between checkboxes
-  },
-  checkboxText: {
-    fontSize: 16,
-    color: '#555', // Consistent text color with other secondary text
-    marginLeft: 8, // Space between checkbox and text
-  },
-  sliderText: {
-    fontSize: 16,
-    color: '#555', // Consistent secondary text color
-    marginBottom: 12, // Spacing below slider labels
-  },
-  button: {
-    backgroundColor: '#007BFF', // More vibrant blue for primary action
-    paddingVertical: 14, // Larger padding for better touch target
-    borderRadius: 8, // Rounded corners for modern design
-    alignItems: 'center',
-    marginTop: 16, // Spacing above the button
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18, // Slightly larger font size for emphasis
-    fontWeight: 'bold',
-  },
-});
+    container: {
+      flex: 1,
+      backgroundColor: '#121212', 
+      padding: 16,
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
+    },
+    input: {
+      width: 350, // Fixed width for input fields
+      height: 48, // Consistent height for inputs
+      borderColor: '#333', // Dark border color
+      borderWidth: 1,
+      borderRadius: 8, // Slightly rounded corners
+      marginBottom: 16, // Uniform spacing between inputs
+      paddingHorizontal: 12, // Comfortable padding inside the input
+      fontSize: 16, // Standard font size
+      backgroundColor: '#1e1e1e', // Darker background for input fields
+      color: '#fff', // White text for readability
+    },
+    label: {
+      fontSize: 18, // Larger font size for labels
+      fontWeight: '600', // Medium font weight
+      marginBottom: 8, // Proper spacing below labels
+      color: '#ffffff', // White text for readability
+    //   textAlign: 'corner', // Center-aligned text
+    },
+    error: {
+      color: '#ff6b6b', // Bright red for error messages
+      fontSize: 14, // Readable font size for errors
+      marginBottom: 12, // Spacing below error messages
+      textAlign: 'center', // Center-aligned text
+    },
+    radioOption: {
+      fontSize: 16, // Standard font size
+      color: '#bbb', // Lighter color for options
+      marginBottom: 8, // Better spacing for radio options
+    //   textAlign: 'center', // Center-aligned text
+      textAlign: 'center'
+    },
+    button: {
+      backgroundColor: '#007BFF', // Bright blue for the button
+      paddingVertical: 14, // Larger padding for better touch target
+      borderRadius: 8, // Rounded corners for a modern design
+      alignItems: 'center', // Center align the button text
+      marginTop: 16, // Spacing above the button
+      width: 350, // Match the width of input fields
+    },
+    buttonText: {
+      color: 'white', // White text for buttons
+      fontSize: 18, // Slightly larger font size for emphasis
+      fontWeight: 'bold', // Bold text for prominence
+    },
+  });
+  
 
 export default FeedbackFrom;
