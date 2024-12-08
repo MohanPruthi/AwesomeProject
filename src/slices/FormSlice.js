@@ -17,15 +17,13 @@ const formSlice = createSlice({
         setList(state, value){
         state.list = value.payload;
         },
-        addToList: (state, value) => {
+        addToList: (state, value) => {          //not in use -> giving index/id as undefined
         state.list.push(value.payload);
         },
         removeFromList: (state, value) => {
         const {id} = value.payload;
-        console.log(id +  " object " + state.list.length)
         if (id >= 0 && id < state.list.length) {
             state.list.splice(id, 1);
-            console.log("list")
         }
         },
         setEditing: (state, value) => {

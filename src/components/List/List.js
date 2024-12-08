@@ -25,7 +25,6 @@ const List = () => {
 
     return (
         <View style={styles.containter}>
-        {/* <Text>List</Text> */}
 
         <FlatList
             data={list}
@@ -33,15 +32,11 @@ const List = () => {
             return <ListCard item={item} index={index} />;
             }}
             showsVerticalScrollIndicator={false}
-            // style={styles.transactionListStyle}
             onEndReachedThreshold={0}
             scrollEnabled
             initialNumToRender={15}
             maxToRenderPerBatch={15}
             updateCellsBatchingPeriod={15}
-            // onEndReached={onEndReachedHandler}
-            // ListEmptyComponent={<EmptyScreenComponent />}
-            // ListFooterComponent={listFooter}
             keyExtractor={(item, index) => `${index} + ${item.firstName}`}
         />
         </View>

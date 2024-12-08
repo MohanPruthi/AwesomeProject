@@ -5,21 +5,20 @@ import { useDispatch } from 'react-redux';
 import {removeItemFromTable, connectToDatabase} from '../../db/db'
 
 const ListCard = ({item, index}) => {
+
   const dispatch = useDispatch();
-  const handleEdit = id => {
-    console.log(`Editing item with id: ${id}`);
-    // Implement the edit functionality here
+
+  const handleEdit = id => {                    //todo
+    console.log(`Editing idex: ${id}`);  
   };
 
   const handleDelete = async(id) => {
-    console.log(`Deleting item with id: ${id}`)
-    // delete from sqlite
+    console.log(`Deleting idex: ${id}`)
+    // delete from sqlite                   //todo (not working)
     const db = await connectToDatabase();
     await removeItemFromTable(db, id)
 
-
-    // delete from redux
-    dispatch(removeFromList({id}))
+    dispatch(removeFromList({id}))           // delete from redux
   };
 
   return (

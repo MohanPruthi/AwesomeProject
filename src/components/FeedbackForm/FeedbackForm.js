@@ -21,26 +21,21 @@ const FeedbackSchema = Yup.object().shape({
     .required('First name is required')
     .min(2, "Too short"),
   lastName: Yup.string()
-    .required('Last name is required')
-    .matches(/^[a-zA-Z\s]+$/, 'Last name must only contain letters'),
+    .required('Last name is required'),
   email: Yup.string()
     .email('Invalid email address')
     .required('Email is required'),
   phoneNumber: Yup.string()
     .required('Phone number is required')
     .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits'),
-
-  // Employee Type
-  employeeType: Yup.string() //radio
+  employeeType: Yup.string() 
     .required('Employee type is required')
     .oneOf(['Intern', 'Manager', 'Lead', 'SDE'], 'Invalid employee type'),
 
-  // Project Details
-  projectName: Yup.string() // drop down
+  projectName: Yup.string()
     .required('Project name is required'),
 
-  // Team Collaboration
-  teamCollaboration: Yup.string() //radio
+  teamCollaboration: Yup.string()
     .required('Team collaboration rating is required')
     .oneOf(
       [
@@ -52,25 +47,27 @@ const FeedbackSchema = Yup.object().shape({
       ],
       'Invalid choice',
     ),
-  collaborationAspects: Yup.array() //check box
+  collaborationAspects: Yup.array()
     .of(Yup.string())
     .min(1, 'At least one aspect of collaboration must be selected'),
 
-  // Challenges Faced
-  challengesFaced: Yup.string() //radio
-    .required('This field is required')
-    .oneOf(['Yes', 'No'], 'Invalid choice'),
-  challengesDescription: Yup.string().when('challengesFaced', {
-    is: 'Yes',
-    then: Yup.string().required('Please describe the challenges faced'),
-    otherwise: Yup.string().notRequired(),
-  }),
+//     challengesFaced: Yup.string()
+//   .required('This field is required')
+//   .oneOf(['Yes', 'No'], 'Invalid choice'),
+
+//   challengesDescription: Yup.string().when('challengesFaced', (challengesFaced, schema) => {
+//     return challengesFaced === 'Yes'
+//       ? schema.required('Please describe the challenges faced')
+//       : schema.nullable();
+//   }),
+  
+      
 
   // Time Management
   timeManagement: Yup.number()
     .required('Time management rating is required') //silder
-    .min(1, 'Minimum rating is 1')
-    .max(10, 'Maximum rating is 10'),
+    .min(0, 'Minimum rating is 0')
+    .max(5, 'Maximum rating is 5'),
 
   // Outcome Evaluation
   projectObjectiveAchieved: Yup.string() //radio
@@ -80,41 +77,38 @@ const FeedbackSchema = Yup.object().shape({
   // Overall Project Experience
   overallExperience: Yup.number() //slider
     .required('Overall experience rating is required')
-    .min(1, 'Minimum rating is 1')
-    .max(10, 'Maximum rating is 10'),
+    .min(0, 'Minimum rating is 0')
+    .max(5, 'Maximum rating is 5'),
 
   // Final Comments
   additionalFeedback: Yup.string().required('This field is required'),
 });
 
 const FeedbackFrom = () => {
+
   const dispatch = useDispatch();
   const {editing} = useSelector(state => state.form);
+
 
   const onSubmit = (values) => {
 
     console.log(values, 'value');
 
-    // navigate to list
-    const saveFeedback = async () => {
+    const saveFeedback = async () => {          //push to sql lite
       const db = await connectToDatabase();
 
-      // Create table if not exists
       await createTable(db);
 
-      // Insert feedback into the table
       await insertFeedback(db, values);
     };
 
-    // Call the saveFeedback function
     saveFeedback().catch(error => {
       console.error('Error saving feedback:', error);
     });
 
     dispatch(addToList(values));        // push to redux array
 
-
-    setList({
+    setList({                       // reset the form
       firstName: '',
       lastName: '',
       email: '',
@@ -129,7 +123,7 @@ const FeedbackFrom = () => {
       delayDescription: '',
       projectObjectiveAchieved: '',
       improvementSuggestions: '',
-      overallExperience: 5,
+      overallExperience: 0,
       additionalFeedback: '',
     });
   };
@@ -154,7 +148,7 @@ const FeedbackFrom = () => {
           delayDescription: '',
           projectObjectiveAchieved: '',
           improvementSuggestions: '',
-          overallExperience: 5,
+          overallExperience: 0,
           additionalFeedback: '',
         }}
         validationSchema={FeedbackSchema}>
@@ -170,17 +164,20 @@ const FeedbackFrom = () => {
           handleReset,
         }) => (
           <View style={styles.container}>
-            {/* Personal Information */}
-            <Text style={styles.label}>First Name</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={handleChange('firstName')}
-              // onBlur={handleBlur('firstName')}
-              value={values.firstName}
-            />
-            {touched.firstName && errors.firstName && (
-              <Text style={styles.error}>{errors.firstName}</Text>
-            )}
+
+            <View>
+                <Text style={styles.label}>First Name</Text>
+                <TextInput
+                style={styles.input}
+                onChangeText={handleChange('firstName')}
+                // onBlur={handleBlur('firstName')}
+                value={values.firstName}
+                />
+                {touched.firstName && errors.firstName && (
+                <Text style={styles.error}>{errors.firstName}</Text>
+                )}
+            </View>
+            
 
             <Text style={styles.label}>Last Name</Text>
             <TextInput
@@ -318,7 +315,7 @@ const FeedbackFrom = () => {
             )}
 
             {/* Time Management (Slider) */}
-            <Text style={styles.label}>Time Management (Rating 1-10)</Text>
+            <Text style={styles.label}>Time Management</Text>
             <Slider
               minimumValue={0}
               maximumValue={5}
@@ -335,7 +332,7 @@ const FeedbackFrom = () => {
                 backgroundColor: 'blue',
               }}
             />
-            <Text>Rating: {values.timeManagement}</Text>
+            <Text style={{color: 'white'}}>Rating: {values.timeManagement}</Text>
 
             {/* Project Objective Achieved (Radio buttons) */}
             <Text style={styles.label}>Project Objective Achieved</Text>
@@ -367,7 +364,7 @@ const FeedbackFrom = () => {
                 backgroundColor: 'blue',
               }}
             />
-            <Text>Rating: {values.overallExperience}</Text>
+            <Text style={{color: 'white'}}>Rating: {values.overallExperience}</Text>
 
             {/* Final Comments */}
             <Text style={styles.label}>Additional Feedback</Text>
@@ -381,7 +378,6 @@ const FeedbackFrom = () => {
               <Text style={styles.error}>{errors.additionalFeedback}</Text>
             )}
 
-            {/* Submit Button */}
             <Button
               style={styles.button}
               title="Submit"
@@ -390,8 +386,16 @@ const FeedbackFrom = () => {
                 onSubmit(values);
                 handleReset();
               }}
-              disabled={!isValid}
+            //   disabled={!isValid}
             />
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSubmit}
+              disabled={!isValid}
+            >
+              <Text style={styles.buttonText}>SUBMIT</Text>
+            </TouchableOpacity>
             <View>
               <Ionicons name="home" size={30} color="green" />
             </View>
@@ -443,13 +447,13 @@ const styles = StyleSheet.create({
       textAlign: 'center'
     },
     button: {
-      backgroundColor: '#007BFF', // Bright blue for the button
-      paddingVertical: 14, // Larger padding for better touch target
-      borderRadius: 8, // Rounded corners for a modern design
-      alignItems: 'center', // Center align the button text
-      marginTop: 16, // Spacing above the button
-      width: 350, // Match the width of input fields
-    },
+        backgroundColor: '#28a745', // Change color to green for a "submit" button look
+        paddingVertical: 12, // Reduced vertical padding for a slightly smaller button
+        borderRadius: 8, // Keep the rounded corners
+        alignItems: 'center', // Center align the button text
+        marginTop: 16, // Spacing above the button
+        width: 200, // Reduced width for a smaller button
+    },      
     buttonText: {
       color: 'white', // White text for buttons
       fontSize: 18, // Slightly larger font size for emphasis

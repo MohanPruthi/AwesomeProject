@@ -43,9 +43,9 @@ export const removeTable = async (db, tableName) => {
 };
 
 export const removeItemFromTable = async (db, id) => {        //todo
-  const query = `DELETE FROM feedback WHERE id = ?`;
+  const query = `DELETE FROM feedback WHERE id = ${id}`;
   try {
-    await db.executeSql(query, [id]);
+    await db.executeSql(query);
     console.log(`Feedback item with id ${id} removed successfully.`);
   } catch (error) {
     console.error(`Failed to remove feedback item with id ${id}:`, error);
