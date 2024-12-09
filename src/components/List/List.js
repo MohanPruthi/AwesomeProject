@@ -24,10 +24,14 @@ const List = () => {
         setSelectedFilter(role)
 
         if (role === 'All') {
-            setSelectedData(list); // Reset to show all items
-        } else {
+            setSelectedData(list);
+        } else if (role === 'Rating') {
+            const filteredData = list.filter(item => item.overallExperience >= 3);
+            setSelectedData(filteredData);
+        }
+        else {
             const filteredData = list.filter(item => item.employeeType === role);
-            setSelectedData(filteredData); // Update filtered data
+            setSelectedData(filteredData);
         }
     }
 
@@ -57,7 +61,7 @@ const List = () => {
             </TouchableOpacity>
 
             <TouchableOpacity style={[styles.filter, selectedFilter==='Rating' && styles.selectedFilter]}
-            onPress={() => console.log('Overall Rating 3+')}
+            onPress={() => roleFilter('Rating')}
             >
                 <Text style={styles.filterHeading}>Rating 3+</Text>
             </TouchableOpacity>
