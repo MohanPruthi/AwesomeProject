@@ -41,7 +41,7 @@ const List = () => {
 
     useEffect(()=> {
         setSelectedData(list)
-        
+        setSelectedFilter('All')
     }, [list])
 
     return (

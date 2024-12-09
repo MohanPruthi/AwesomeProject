@@ -178,65 +178,74 @@ const FeedbackFrom = () => {
                 )}
             </View>
             
+            <View>
+              <Text style={styles.label}>Last Name</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange('lastName')}
+                // onBlur={handleBlur('lastName')}
+                value={values.lastName}
+              />
+              {touched.lastName && errors.lastName && (
+                <Text style={styles.error}>{errors.lastName}</Text>
+              )}
+            </View>
+            
+            <View>
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange('email')}
+                // onBlur={handleBlur('email')}
+                value={values.email}
+              />
+              {touched.email && errors.email && (
+                <Text style={styles.error}>{errors.email}</Text>
+              )}
+            </View>
+           
+            <View>
+              <Text style={styles.label}>Phone Number</Text>
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                onChangeText={handleChange('phoneNumber')}
+                // onBlur={handleBlur('phoneNumber')}
+                value={values.phoneNumber}
+              />
+              {touched.phoneNumber && errors.phoneNumber && (
+                <Text style={styles.error}>{errors.phoneNumber}</Text>
+              )}
+            </View>
 
-            <Text style={styles.label}>Last Name</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={handleChange('lastName')}
-              // onBlur={handleBlur('lastName')}
-              value={values.lastName}
-            />
-            {touched.lastName && errors.lastName && (
-              <Text style={styles.error}>{errors.lastName}</Text>
-            )}
+            <View>
+              <Text style={styles.label}>Employee Type</Text>
+              {['Intern', 'Manager', 'Lead', 'SDE'].map(type => (
+                <TouchableOpacity
+                  key={type}
+                  onPress={() => setFieldValue('employeeType', type)}>
+                  <Text style={styles.radioOption}>{type}</Text>
+                </TouchableOpacity>
+              ))}
+              {touched.employeeType && errors.employeeType && (
+                <Text style={styles.error}>{errors.employeeType}</Text>
+              )}
+            </View>
 
-            <Text style={styles.label}>Email</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={handleChange('email')}
-              // onBlur={handleBlur('email')}
-              value={values.email}
-            />
-            {touched.email && errors.email && (
-              <Text style={styles.error}>{errors.email}</Text>
-            )}
-
-            <Text style={styles.label}>Phone Number</Text>
-            <TextInput
-              style={styles.input}
-              keyboardType="numeric"
-              onChangeText={handleChange('phoneNumber')}
-              // onBlur={handleBlur('phoneNumber')}
-              value={values.phoneNumber}
-            />
-            {touched.phoneNumber && errors.phoneNumber && (
-              <Text style={styles.error}>{errors.phoneNumber}</Text>
-            )}
-
-            {/* Employee Type (Radio buttons) */}
-            <Text style={styles.label}>Employee Type</Text>
-            {['Intern', 'Manager', 'Lead', 'SDE'].map(type => (
-              <TouchableOpacity
-                key={type}
-                onPress={() => setFieldValue('employeeType', type)}>
-                <Text style={styles.radioOption}>{type}</Text>
-              </TouchableOpacity>
-            ))}
-            {touched.employeeType && errors.employeeType && (
-              <Text style={styles.error}>{errors.employeeType}</Text>
-            )}
-
-            {/* Project Name (Dropdown/Select) */}
-            <Text style={styles.label}>Project Name</Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={handleChange('projectName')}
-              // onBlur={handleBlur('projectName')}
-              value={values.projectName}
-            />
-            {touched.projectName && errors.projectName && (
-              <Text style={styles.error}>{errors.projectName}</Text>
-            )}
+            <View>
+              <Text style={styles.label}>Project Name</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange('projectName')}
+                // onBlur={handleBlur('projectName')}
+                value={values.projectName}
+              />
+              {touched.projectName && errors.projectName && (
+                <Text style={styles.error}>{errors.projectName}</Text>
+              )}
+            </View>
+            
+            
 
             {/* Team Collaboration (Radio buttons) */}
             <Text style={styles.label}>Team Collaboration</Text>
