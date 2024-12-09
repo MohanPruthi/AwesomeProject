@@ -9,7 +9,7 @@ const ListCard = ({item, index}) => {
   const dispatch = useDispatch();
 
   const handleEdit = id => {                    //todo
-    console.log(`Editing idex: ${id}`);  
+    console.log(`Editing idex: ${id}`);
   };
 
   const handleDelete = async(id) => {
@@ -44,6 +44,9 @@ const ListCard = ({item, index}) => {
       <Text style={styles.cardText}>
         Project Objective Achieved: {item.projectObjectiveAchieved}
       </Text>
+      <Text style={styles.cardText}>
+        Employee Type: {item.employeeType}
+      </Text>
 
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
@@ -76,7 +79,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     borderWidth: 2,
     borderColor: '#333',
-    height: 350,
+    height: 380,
     width: 350,
     justifyContent: 'center'
   },

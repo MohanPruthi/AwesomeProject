@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, StyleSheet} from 'react-native';
+import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {getFeedback} from '../../db/db';
 import { setList } from '../../slices/FormSlice';
@@ -9,11 +9,30 @@ const List = () => {
 
     const dispatch = useDispatch() 
     const {list} = useSelector(state => state.form);
+    const [selectedFilter, setSelectedFilter] = useState('All');
+    const [selectedData, setSelectedData] = useState(list)
+
 
     const getListData = async () => {
         const data = await getFeedback(); 
         dispatch(setList(data))
+        setSelectedData(data)
     };
+
+    const roleFilter = (role)=> {
+        console.log(role)
+        setSelectedFilter(role)
+
+        if (role === 'All') {
+            setSelectedData(list); // Reset to show all items
+        } else {
+            const filteredData = list.filter(item => item.employeeType === role);
+            setSelectedData(filteredData); // Update filtered data
+        }
+
+
+
+    }
 
 
     console.log("rerender")
@@ -25,9 +44,44 @@ const List = () => {
 
     return (
         <View style={styles.containter}>
+        
+        <View style={styles.filterArea}>
+
+            {/* <Text style={styles.filterHeading}>Filters-</Text> */}
+            <TouchableOpacity style={[styles.filter, selectedFilter==='All' && styles.selectedFilter]}
+            onPress={() => roleFilter('All')}
+            >
+                <Text style={styles.filterHeading}>All</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.filter, selectedFilter==='Rating' && styles.selectedFilter]}
+            onPress={() => console.log('Overall Rating 3+')}
+            >
+                <Text style={styles.filterHeading}>Rating 3+</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.filter, selectedFilter==='Intern' && styles.selectedFilter]}
+            onPress={() => roleFilter('Intern')}
+            >
+                <Text style={styles.filterHeading}>Intern</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.filter, selectedFilter==='Manager' && styles.selectedFilter]}
+            onPress={() => roleFilter('Manager')}
+            >
+                <Text style={styles.filterHeading}>Manager</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.filter, selectedFilter==='SDE' && styles.selectedFilter]}
+            onPress={() => roleFilter('SDE')}
+            >
+                <Text style={styles.filterHeading}>SDE</Text>
+            </TouchableOpacity>
+
+        </View>
 
         <FlatList
-            data={list}
+            data={selectedData}
             renderItem={({item, index}) => {
             return <ListCard item={item} index={index} />;
             }}
@@ -51,6 +105,43 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#121212',
         justifyContent: 'center',
-        alignItems: 'center'
-    }
+        alignItems: 'center',
+    },
+    filterArea: {
+        backgroundColor: "#1e1e1e",
+        flexDirection: 'row',
+        height: 50,
+        width: '100%',
+        padding: 6,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#333',
+    },
+    filterHeading:{
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#f1f1f1',       
+    },
+    filter: {
+       borderRadius: 6,
+       borderWidth: 2,
+       borderColor: '#333',
+       marginLeft: 10,
+    //    marginRight: 10,
+       minWidth: 50,
+       width: 'auto',
+       height: 40,
+       padding: 5,
+       alignItems: 'center',
+       justifyContent: 'center',
+    },
+    selectedFilter: {
+        backgroundColor: '#007bff', 
+        borderColor: '#0056b3', 
+    },
+    selectedFilterText: {
+        color: '#ffffff', 
+        fontWeight: 'bold', 
+    },
 })

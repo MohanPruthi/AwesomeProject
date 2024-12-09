@@ -51,15 +51,15 @@ const FeedbackSchema = Yup.object().shape({
     .of(Yup.string())
     .min(1, 'At least one aspect of collaboration must be selected'),
 
-//     challengesFaced: Yup.string()
-//   .required('This field is required')
-//   .oneOf(['Yes', 'No'], 'Invalid choice'),
+    challengesFaced: Yup.string()
+  .required('This field is required')
+  .oneOf(['Yes', 'No'], 'Invalid choice'),
 
-//   challengesDescription: Yup.string().when('challengesFaced', (challengesFaced, schema) => {
-//     return challengesFaced === 'Yes'
-//       ? schema.required('Please describe the challenges faced')
-//       : schema.nullable();
-//   }),
+  challengesDescription: Yup.string().when('challengesFaced', (challengesFaced, schema) => {
+    return challengesFaced === 'Yes'
+      ? schema.required('Please describe the challenges faced')
+      : schema.nullable();
+  }),
   
       
 
@@ -386,7 +386,7 @@ const FeedbackFrom = () => {
                 onSubmit(values);
                 handleReset();
               }}
-            //   disabled={!isValid}
+              disabled={!isValid}
             />
 
             <TouchableOpacity
