@@ -2,7 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import List from './src/components/List/List';
-import FeedbackFrom from './src/components/FeedbackForm/FeedbackForm';
+import FeedbackForm from './src/components/FeedbackForm/FeedbackForm';
 import Settings from './src/components/Settings/Settings';
 // import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -29,7 +29,7 @@ export default function App() {
       // })}
       >
         <Tab.Screen name="List" component={List} />
-        <Tab.Screen name="New Feedback" component={FeedbackFrom} />
+        <Tab.Screen name="FeedbackForm" component={FeedbackForm} />
         <Tab.Screen name="Settings" component={Settings} />
       </Tab.Navigator>
     </NavigationContainer>

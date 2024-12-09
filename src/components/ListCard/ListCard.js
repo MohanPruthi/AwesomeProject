@@ -1,15 +1,24 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import {removeFromList} from '../../slices/FormSlice'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {removeItemFromTable, connectToDatabase} from '../../db/db'
+import { useNavigation } from '@react-navigation/native';
+import { setEditing, setIndex } from '../../slices/FormSlice'
+// import FeedbackForm from '../FeedbackForm/FeedbackForm';
 
 const ListCard = ({item, index}) => {
 
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const { editing } = useSelector((state) => state.form);
 
-  const handleEdit = id => {                    //todo
+  const handleEdit = (id) => {                    //todo
     console.log(`Editing idex: ${id}`);
+
+    dispatch(setEditing(true));
+    dispatch(setIndex(id));
+    navigation.jumpTo('FeedbackForm');
   };
 
   const handleDelete = async(id) => {

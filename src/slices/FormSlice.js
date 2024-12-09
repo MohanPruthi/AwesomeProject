@@ -5,6 +5,7 @@ const initialState = {
     loading: false,
     list: [],
     editing: false,
+    index: null,
   };
 
 const formSlice = createSlice({
@@ -27,11 +28,14 @@ const formSlice = createSlice({
         }
         },
         setEditing: (state, value) => {
-        state.editCourse = value.payload;
+        state.editing = value.payload;
         },
+        setIndex: (state, value) => {
+        state.index = value.payload;
+        }
     },
 });
 
-export const {setList, setLoading, setEditing, addToList, removeFromList} = formSlice.actions;
+export const {setList, setLoading, setEditing, addToList, removeFromList, setIndex} = formSlice.actions;
 
 export default formSlice.reducer

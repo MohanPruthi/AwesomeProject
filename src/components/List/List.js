@@ -52,8 +52,6 @@ const List = () => {
         <View style={styles.containter}>
         
         <View style={styles.filterArea}>
-
-            {/* <Text style={styles.filterHeading}>Filters-</Text> */}
             <TouchableOpacity style={[styles.filter, selectedFilter==='All' && styles.selectedFilter]}
             onPress={() => roleFilter('All')}
             >
@@ -83,7 +81,6 @@ const List = () => {
             >
                 <Text style={styles.filterHeading}>SDE</Text>
             </TouchableOpacity>
-
         </View>
 
         <FlatList

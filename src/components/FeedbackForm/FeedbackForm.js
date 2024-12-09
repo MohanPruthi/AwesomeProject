@@ -14,81 +14,32 @@ import {useSelector, useDispatch} from 'react-redux';
 import {addToList, setList} from '../../slices/FormSlice';
 import {Slider, CheckBox} from '@rneui/themed';
 import {connectToDatabase, createTable, insertFeedback, getFeedback} from '../../db/db';
-import Ionicons from 'react-native-vector-icons/Ionicons'; // Import the icon set
 
 const FeedbackSchema = Yup.object().shape({
-  firstName: Yup.string()
-    .required('First name is required')
-    .min(2, "Too short"),
-  lastName: Yup.string()
-    .required('Last name is required'),
-  email: Yup.string()
-    .email('Invalid email address')
-    .required('Email is required'),
-  phoneNumber: Yup.string()
-    .required('Phone number is required')
-    .matches(/^[0-9]{10}$/, 'Phone number must be 10 digits'),
-  employeeType: Yup.string() 
-    .required('Employee type is required')
-    .oneOf(['Intern', 'Manager', 'Lead', 'SDE'], 'Invalid employee type'),
-
-  projectName: Yup.string()
-    .required('Project name is required'),
-
-  teamCollaboration: Yup.string()
-    .required('Team collaboration rating is required')
-    .oneOf(
-      [
-        'Very Satisfied',
-        'Satisfied',
-        'Neutral',
-        'Dissatisfied',
-        'Very Dissatisfied',
-      ],
-      'Invalid choice',
-    ),
-  collaborationAspects: Yup.array()
-    .of(Yup.string())
-    .min(1, 'At least one aspect of collaboration must be selected'),
-
-    challengesFaced: Yup.string()
-  .required('This field is required')
-  .oneOf(['Yes', 'No'], 'Invalid choice'),
-
+  firstName: Yup.string().required('First name is required').min(2, "Too short"),
+  lastName: Yup.string().required('Last name is required'),
+  email: Yup.string().email('Invalid email address').required('Email is required'),
+  phoneNumber: Yup.string().required('Phone number is required').matches(/^[0-9]{10}$/, 'Phone number must be 10 digits'),
+  employeeType: Yup.string().required('Employee type is required').oneOf(['Intern', 'Manager', 'Lead', 'SDE'], 'Invalid employee type'),
+  projectName: Yup.string().required('Project name is required'),
+  teamCollaboration: Yup.string().required('Team collaboration rating is required').oneOf(['Very Satisfied', 'Satisfied', 'Neutral', 'Dissatisfied', 'Very Dissatisfied'], 'Invalid choice'),
+  collaborationAspects: Yup.array().of(Yup.string()).min(1, 'At least one aspect of collaboration must be selected'),
+  challengesFaced: Yup.string().required('This field is required').oneOf(['Yes', 'No'], 'Invalid choice'),
   challengesDescription: Yup.string().when('challengesFaced', (challengesFaced, schema) => {
-    return challengesFaced === 'Yes'
-      ? schema.required('Please describe the challenges faced')
-      : schema.nullable();
+    return challengesFaced === 'Yes' ? schema.required('Please describe the challenges faced') : schema.nullable();
   }),
-  
-      
-
-  // Time Management
-  timeManagement: Yup.number()
-    .required('Time management rating is required') //silder
-    .min(0, 'Minimum rating is 0')
-    .max(5, 'Maximum rating is 5'),
-
-  // Outcome Evaluation
-  projectObjectiveAchieved: Yup.string() //radio
-    .required('This field is required')
-    .oneOf(['Yes', 'Partially', 'No'], 'Invalid choice'),
-
-  // Overall Project Experience
-  overallExperience: Yup.number() //slider
-    .required('Overall experience rating is required')
-    .min(0, 'Minimum rating is 0')
-    .max(5, 'Maximum rating is 5'),
-
-  // Final Comments
+  timeManagement: Yup.number().required('Time management rating is required').min(0, 'Minimum rating is 0').max(5, 'Maximum rating is 5'),
+  projectObjectiveAchieved: Yup.string().required('This field is required').oneOf(['Yes', 'Partially', 'No'], 'Invalid choice'),
+  overallExperience: Yup.number().required('Overall experience rating is required').min(0, 'Minimum rating is 0').max(5, 'Maximum rating is 5'),
   additionalFeedback: Yup.string().required('This field is required'),
 });
 
-const FeedbackFrom = () => {
+const FeedbackForm = () => {
 
   const dispatch = useDispatch();
-  const {editing} = useSelector(state => state.form);
+  const {editing, index, list} = useSelector(state => state.form);
 
+  console.log(editing + " " + index)
 
   const onSubmit = (values) => {
 
@@ -132,8 +83,7 @@ const FeedbackFrom = () => {
     <ScrollView>
       <Formik
         initialValues={{
-          // firstName: editing ? list[index].firstName : '',
-          firstName: '',
+          firstName: editing ? list[index].firstName : '',
           lastName: '',
           email: '',
           phoneNumber: '',
@@ -150,7 +100,10 @@ const FeedbackFrom = () => {
           overallExperience: 0,
           additionalFeedback: '',
         }}
-        validationSchema={FeedbackSchema}>
+        validationSchema={FeedbackSchema}
+        validateOnChange={true}
+        onSubmit={onSubmit}
+        >
         {({
           values,
           errors,
@@ -417,7 +370,6 @@ const FeedbackFrom = () => {
                 style={ isValid? styles.button : styles.disabledButton}
                 onPress={()=> {
                   onSubmit(values);
-                  handleSubmit();
                   handleReset();
                 }}
                 disabled={!isValid}
@@ -538,4 +490,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default FeedbackFrom;
+export default FeedbackForm;
