@@ -29,9 +29,6 @@ const List = () => {
             const filteredData = list.filter(item => item.employeeType === role);
             setSelectedData(filteredData); // Update filtered data
         }
-
-
-
     }
 
 
@@ -41,6 +38,11 @@ const List = () => {
     useEffect(() => {
         getListData();
     }, []);
+
+    useEffect(()=> {
+        setSelectedData(list)
+        
+    }, [list])
 
     return (
         <View style={styles.containter}>
