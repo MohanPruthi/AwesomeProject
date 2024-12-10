@@ -46,6 +46,12 @@ const FeedbackForm = () => {
 
     console.log(values, 'value');
 
+    if(editing){
+      // find the index in redux (list) and update the value OR make a slice setUpdate function
+
+      
+    }
+
     const saveFeedback = async () => {          //push to sql lite
       const db = await connectToDatabase();
 
@@ -107,6 +113,7 @@ const FeedbackForm = () => {
         }}
         validationSchema={FeedbackSchema}
         validateOnChange={true}
+        enableReinitialize={true}
         onSubmit={onSubmit}
         >
         {({

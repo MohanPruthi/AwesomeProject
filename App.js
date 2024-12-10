@@ -8,6 +8,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
+// const obj = {
+//   List:(focused) => focused ? 'list' : 'list-outline',
+
+
+// }
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -22,6 +28,8 @@ export default function App() {
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
           }
+
+          // obj[route.name]
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'green',
