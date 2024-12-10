@@ -113,7 +113,9 @@ dependencies {
 
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-sqlite-storage')
-
+    project.ext.vectoricons = [
+        iconFontNames: [ 'Ionicons.ttf', 'MaterialIcons.ttf', 'FontAwesome.ttf' ] // Add the icons you are using here
+    ]
 
 
     if (hermesEnabled.toBoolean()) {

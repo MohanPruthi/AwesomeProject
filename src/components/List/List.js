@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, listStylesheet, TouchableOpacity} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {getFeedback} from '../../db/db';
 import { setList } from '../../slices/FormSlice';
@@ -11,6 +11,7 @@ const List = () => {
     const {list} = useSelector(state => state.form);
     const [selectedFilter, setSelectedFilter] = useState('All');
     const [selectedData, setSelectedData] = useState(list)
+    const {listStyles} = useSelector((state)=>state.theme)
 
 
     const getListData = async () => {
@@ -49,37 +50,37 @@ const List = () => {
     }, [list])
 
     return (
-        <View style={styles.containter}>
+        <View style={listStyles.containter}>
         
-        <View style={styles.filterArea}>
-            <TouchableOpacity style={[styles.filter, selectedFilter==='All' && styles.selectedFilter]}
+        <View style={listStyles.filterArea}>
+            <TouchableOpacity style={[listStyles.filter, selectedFilter==='All' && listStyles.selectedFilter]}
             onPress={() => roleFilter('All')}
             >
-                <Text style={styles.filterHeading}>All</Text>
+                <Text style={listStyles.filterHeading}>All</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.filter, selectedFilter==='Rating' && styles.selectedFilter]}
+            <TouchableOpacity style={[listStyles.filter, selectedFilter==='Rating' && listStyles.selectedFilter]}
             onPress={() => roleFilter('Rating')}
             >
-                <Text style={styles.filterHeading}>Rating 3+</Text>
+                <Text style={listStyles.filterHeading}>Rating 3+</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.filter, selectedFilter==='Intern' && styles.selectedFilter]}
+            <TouchableOpacity style={[listStyles.filter, selectedFilter==='Intern' && listStyles.selectedFilter]}
             onPress={() => roleFilter('Intern')}
             >
-                <Text style={styles.filterHeading}>Intern</Text>
+                <Text style={listStyles.filterHeading}>Intern</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.filter, selectedFilter==='Manager' && styles.selectedFilter]}
+            <TouchableOpacity style={[listStyles.filter, selectedFilter==='Manager' && listStyles.selectedFilter]}
             onPress={() => roleFilter('Manager')}
             >
-                <Text style={styles.filterHeading}>Manager</Text>
+                <Text style={listStyles.filterHeading}>Manager</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.filter, selectedFilter==='SDE' && styles.selectedFilter]}
+            <TouchableOpacity style={[listStyles.filter, selectedFilter==='SDE' && listStyles.selectedFilter]}
             onPress={() => roleFilter('SDE')}
             >
-                <Text style={styles.filterHeading}>SDE</Text>
+                <Text style={listStyles.filterHeading}>SDE</Text>
             </TouchableOpacity>
         </View>
 
@@ -103,48 +104,48 @@ const List = () => {
 export default List;
 
 
-const styles = StyleSheet.create({
-    containter: {
-        flex: 1,
-        backgroundColor: '#121212',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    filterArea: {
-        backgroundColor: "#1e1e1e",
-        flexDirection: 'row',
-        height: 50,
-        width: '100%',
-        padding: 6,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#333',
-    },
-    filterHeading:{
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#f1f1f1',       
-    },
-    filter: {
-       borderRadius: 6,
-       borderWidth: 2,
-       borderColor: '#333',
-       marginLeft: 10,
-    //    marginRight: 10,
-       minWidth: 50,
-       width: 'auto',
-       height: 40,
-       padding: 5,
-       alignItems: 'center',
-       justifyContent: 'center',
-    },
-    selectedFilter: {
-        backgroundColor: '#007bff', 
-        borderColor: '#0056b3', 
-    },
-    selectedFilterText: {
-        color: '#ffffff', 
-        fontWeight: 'bold', 
-    },
-})
+// const listStyles = listStylesheet.create({
+//     containter: {
+//         flex: 1,
+//         backgroundColor: '#121212',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     filterArea: {
+//         backgroundColor: "#1e1e1e",
+//         flexDirection: 'row',
+//         height: 50,
+//         width: '100%',
+//         padding: 6,
+//         alignItems: 'center',
+//         justifyContent: 'center',
+//         borderBottomWidth: 1,
+//         borderBottomColor: '#333',
+//     },
+//     filterHeading:{
+//         fontSize: 20,
+//         fontWeight: 'bold',
+//         color: '#f1f1f1',       
+//     },
+//     filter: {
+//        borderRadius: 6,
+//        borderWidth: 2,
+//        borderColor: '#333',
+//        marginLeft: 10,
+//     //    marginRight: 10,
+//        minWidth: 50,
+//        width: 'auto',
+//        height: 40,
+//        padding: 5,
+//        alignItems: 'center',
+//        justifyContent: 'center',
+//     },
+//     selectedFilter: {
+//         backgroundColor: '#007bff', 
+//         borderColor: '#0056b3', 
+//     },
+//     selectedFilterText: {
+//         color: '#ffffff', 
+//         fontWeight: 'bold', 
+//     },
+// })

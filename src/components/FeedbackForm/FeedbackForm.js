@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
   ScrollView,
   Button,
-  StyleSheet,
+  formStylesheet,
   TextInput,
   TouchableOpacity,
 } from 'react-native';
@@ -38,6 +38,7 @@ const FeedbackForm = () => {
 
   const dispatch = useDispatch();
   const {editing, index, list} = useSelector(state => state.form);
+  const {formStyles} = useSelector((state)=>state.theme)
 
   console.log(editing + " " + index)
 
@@ -59,46 +60,50 @@ const FeedbackForm = () => {
 
     dispatch(addToList(values));        // push to redux array
 
-    setList({                       // reset the form
-      firstName: '',
-      lastName: '',
-      email: '',
-      phoneNumber: '',
-      employeeType: '',
-      projectName: '',
-      teamCollaboration: '',
-      collaborationAspects: [],
-      challengesFaced: '',
-      challengesDescription: '',
-      timeManagement: 0,
-      delayDescription: '',
-      projectObjectiveAchieved: '',
-      improvementSuggestions: '',
-      overallExperience: 0,
-      additionalFeedback: '',
-    });
-  };
+    // setList({                       // reset the form
+    //   firstName: '',
+    //   lastName: '',
+    //   email: '',
+    //   phoneNumber: '',
+    //   employeeType: '',
+    //   projectName: '',
+    //   teamCollaboration: '',
+    //   collaborationAspects: [],
+    //   challengesFaced: '',
+    //   challengesDescription: '',
+    //   timeManagement: 0,
+    //   delayDescription: '',
+    //   projectObjectiveAchieved: '',
+    //   improvementSuggestions: '',
+    //   overallExperience: 0,
+    //   additionalFeedback: '',
+    // });
+  }; 
+  console.log("rerender from")
+  useEffect(() => {
+    // write logic to rerender the page based on editing
+  }, [editing, index])
 
   return (
     <ScrollView>
       <Formik
         initialValues={{
-          firstName: editing ? list[index].firstName : '',
-          lastName: '',
-          email: '',
-          phoneNumber: '',
-          employeeType: '',
-          projectName: '',
-          teamCollaboration: '',
-          collaborationAspects: [],
-          challengesFaced: '',
-          challengesDescription: '',
-          timeManagement: 0,
-          delayDescription: '',
-          projectObjectiveAchieved: '',
-          improvementSuggestions: '',
-          overallExperience: 0,
-          additionalFeedback: '',
+          firstName: editing && list[index]?.firstName ? list[index].firstName : '',
+          lastName: editing && list[index]?.lastName ? list[index].lastName : '',
+          email: editing && list[index]?.email ? list[index].email : '',
+          phoneNumber: editing && list[index]?.phoneNumber ? list[index].phoneNumber : '',
+          employeeType: editing && list[index]?.employeeType ? list[index].employeeType : '',
+          projectName: editing && list[index]?.projectName ? list[index].projectName : '',
+          teamCollaboration: editing && list[index]?.teamCollaboration ? list[index].teamCollaboration : '',
+          collaborationAspects: editing && list[index]?.collaborationAspects ? list[index].collaborationAspects : [],
+          challengesFaced: editing && list[index]?.challengesFaced ? list[index].challengesFaced : '',
+          challengesDescription: editing && list[index]?.challengesDescription ? list[index].challengesDescription : '',
+          timeManagement: editing && list[index]?.timeManagement ? list[index].timeManagement : 0,
+          delayDescription: editing && list[index]?.delayDescription ? list[index].delayDescription : '',
+          projectObjectiveAchieved: editing && list[index]?.projectObjectiveAchieved ? list[index].projectObjectiveAchieved : '',
+          improvementSuggestions: editing && list[index]?.improvementSuggestions ? list[index].improvementSuggestions : '',
+          overallExperience: editing && list[index]?.overallExperience ? list[index].overallExperience : 0,
+          additionalFeedback: editing && list[index]?.additionalFeedback ? list[index].additionalFeedback : '',
         }}
         validationSchema={FeedbackSchema}
         validateOnChange={true}
@@ -115,90 +120,90 @@ const FeedbackForm = () => {
           setFieldValue,
           handleReset,
         }) => (
-          <View style={styles.container}>
+          <View style={formStyles.container}>
 
-            <View style={styles.sections}>
-                <Text style={styles.label}>First Name</Text>
+            <View style={formStyles.sections}>
+                <Text style={formStyles.label}>First Name</Text>
                 <TextInput
-                style={styles.input}
+                style={formStyles.input}
                 onChangeText={handleChange('firstName')}
                 value={values.firstName}
                 />
                 {touched.firstName && errors.firstName && (
-                <Text style={styles.error}>{errors.firstName}</Text>
+                <Text style={formStyles.error}>{errors.firstName}</Text>
                 )}
             </View>
 
-            <View style={styles.sections}>
-              <Text style={styles.label}>Last Name</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Last Name</Text>
               <TextInput
-                style={styles.input}
+                style={formStyles.input}
                 onChangeText={handleChange('lastName')}
                 value={values.lastName}
               />
               {touched.lastName && errors.lastName && (
-                <Text style={styles.error}>{errors.lastName}</Text>
+                <Text style={formStyles.error}>{errors.lastName}</Text>
               )}
             </View>
             
-            <View style={styles.sections}>
-              <Text style={styles.label}>Email</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Email</Text>
               <TextInput
-                style={styles.input}
+                style={formStyles.input}
                 onChangeText={handleChange('email')}
                 value={values.email}
               />
               {touched.email && errors.email && (
-                <Text style={styles.error}>{errors.email}</Text>
+                <Text style={formStyles.error}>{errors.email}</Text>
               )}
             </View>
            
-            <View style={styles.sections}>
-              <Text style={styles.label}>Phone Number</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Phone Number</Text>
               <TextInput
-                style={styles.input}
+                style={formStyles.input}
                 keyboardType="numeric"
                 onChangeText={handleChange('phoneNumber')}
                 value={values.phoneNumber}
               />
               {touched.phoneNumber && errors.phoneNumber && (
-                <Text style={styles.error}>{errors.phoneNumber}</Text>
+                <Text style={formStyles.error}>{errors.phoneNumber}</Text>
               )}
             </View>
 
-            <View style={styles.sections}>
-              <Text style={styles.label}>Employee Type</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Employee Type</Text>
               {['Intern', 'Manager', 'Lead', 'SDE'].map(type => (
                 <TouchableOpacity
                   key={type}
                   onPress={() => setFieldValue('employeeType', type)}>
-                    <View style={styles.radioContainer}>
-                      <View style={styles.radioCircle}>
-                        {values.employeeType === type && <View style={styles.radioCircleFilled} />}
+                    <View style={formStyles.radioContainer}>
+                      <View style={formStyles.radioCircle}>
+                        {values.employeeType === type && <View style={formStyles.radioCircleFilled} />}
                       </View>
-                      <Text style={styles.radioOption}>{type}</Text>
+                      <Text style={formStyles.radioOption}>{type}</Text>
                     </View>
                 </TouchableOpacity>
               ))}
               {touched.employeeType && errors.employeeType && (
-                <Text style={styles.error}>{errors.employeeType}</Text>
+                <Text style={formStyles.error}>{errors.employeeType}</Text>
               )}
             </View>
 
-            <View style={styles.sections}>
-              <Text style={styles.label}>Project Name</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Project Name</Text>
               <TextInput
-                style={styles.input}
+                style={formStyles.input}
                 onChangeText={handleChange('projectName')}
                 value={values.projectName}
               />
               {touched.projectName && errors.projectName && (
-                <Text style={styles.error}>{errors.projectName}</Text>
+                <Text style={formStyles.error}>{errors.projectName}</Text>
               )}
             </View>
 
-            <View style={styles.sections}>
-              <Text style={styles.label}>Team Collaboration</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Team Collaboration</Text>
               {[
                 'Very Satisfied',
                 'Satisfied',
@@ -209,21 +214,21 @@ const FeedbackForm = () => {
                 <TouchableOpacity
                   key={option}
                   onPress={() => setFieldValue('teamCollaboration', option)}>
-                    <View style={styles.radioContainer}>
-                      <View style={styles.radioCircle}>
-                        {values.teamCollaboration === option && <View style={styles.radioCircleFilled} />}
+                    <View style={formStyles.radioContainer}>
+                      <View style={formStyles.radioCircle}>
+                        {values.teamCollaboration === option && <View style={formStyles.radioCircleFilled} />}
                       </View>
-                      <Text style={styles.radioOption}>{option}</Text>
+                      <Text style={formStyles.radioOption}>{option}</Text>
                     </View>
                 </TouchableOpacity>
               ))}
               {touched.teamCollaboration && errors.teamCollaboration && (
-                <Text style={styles.error}>{errors.teamCollaboration}</Text>
+                <Text style={formStyles.error}>{errors.teamCollaboration}</Text>
               )}
             </View>
 
-            <View style={styles.sections}>
-              <Text style={styles.label}>Collaboration Aspects</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Collaboration Aspects</Text>
               {['Communication', 'Support', 'Task Distribution'].map(aspect => (
                 <CheckBox
                   key={aspect}
@@ -235,7 +240,7 @@ const FeedbackForm = () => {
                   checkedColor="#FFC107"
                   uncheckedColor="#bbb" // Optional: Customize unchecked color
                   checked={values.collaborationAspects.includes(aspect)}
-                  containerStyle={styles.checkboxContainter}
+                  containerStyle={formStyles.checkboxContainter}
                   textStyle={{ fontSize: 18, color: '#333' }} // Adjust font size and color
                   onPress={() => {
                     const isChecked = values.collaborationAspects.includes(aspect);
@@ -249,42 +254,42 @@ const FeedbackForm = () => {
 
 
               {touched.collaborationAspects && errors.collaborationAspects && (
-                <Text style={styles.error}>{errors.collaborationAspects}</Text>
+                <Text style={formStyles.error}>{errors.collaborationAspects}</Text>
               )}
             </View>
 
-            <View style={styles.sections}>
-              <Text style={styles.label}>Challenges Faced</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Challenges Faced</Text>
               {['Yes', 'No'].map(choice => (
                 <TouchableOpacity
                   key={choice}
                   onPress={() => setFieldValue('challengesFaced', choice)}>
-                    <View style={styles.radioContainer}>
-                      <View style={styles.radioCircle}>
-                        {values.challengesFaced === choice && <View style={styles.radioCircleFilled} />}
+                    <View style={formStyles.radioContainer}>
+                      <View style={formStyles.radioCircle}>
+                        {values.challengesFaced === choice && <View style={formStyles.radioCircleFilled} />}
                       </View>
-                      <Text style={styles.radioOption}>{choice}</Text>
+                      <Text style={formStyles.radioOption}>{choice}</Text>
                     </View>
                 </TouchableOpacity>
               ))}
               {touched.challengesFaced && errors.challengesFaced && (
-                <Text style={styles.error}>{errors.challengesFaced}</Text>
+                <Text style={formStyles.error}>{errors.challengesFaced}</Text>
               )} 
             </View>
             
             {
               values.challengesFaced === 'Yes' && (
-                <View style={styles.sections}>
-                  <Text style={styles.label}>Challenges Description</Text>
+                <View style={formStyles.sections}>
+                  <Text style={formStyles.label}>Challenges Description</Text>
                   <TextInput
-                    style={styles.input}
+                    style={formStyles.input}
                     onChangeText={handleChange('challengesDescription')}
                     // onBlur={handleBlur('challengesDescription')}
                     value={values.challengesDescription}
                   />
                   {touched.challengesDescription &&
                     errors.challengesDescription && (
-                      <Text style={styles.error}>
+                      <Text style={formStyles.error}>
                         {errors.challengesDescription}
                       </Text>
                     )}
@@ -292,26 +297,26 @@ const FeedbackForm = () => {
               )
             }
             
-            <View style={styles.sections}>
-              <Text style={styles.label}>Project Objective Achieved</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Project Objective Achieved</Text>
               {['Yes', 'Partially', 'No'].map(choice => (
                 <TouchableOpacity
                   key={choice}
                   onPress={() =>
                     setFieldValue('projectObjectiveAchieved', choice)
                   }>
-                    <View style={styles.radioContainer}>
-                      <View style={styles.radioCircle}>
-                        {values.projectObjectiveAchieved === choice && <View style={styles.radioCircleFilled} />}
+                    <View style={formStyles.radioContainer}>
+                      <View style={formStyles.radioCircle}>
+                        {values.projectObjectiveAchieved === choice && <View style={formStyles.radioCircleFilled} />}
                       </View>
-                      <Text style={styles.radioOption}>{choice}</Text>
+                      <Text style={formStyles.radioOption}>{choice}</Text>
                     </View>
                 </TouchableOpacity>
               ))}
             </View>
 
-            <View style={styles.sections}>
-              <Text style={styles.label}>Time Management</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Time Management</Text>
               <Slider
                 minimumValue={0}
                 maximumValue={5}
@@ -331,8 +336,8 @@ const FeedbackForm = () => {
               <Text style={{color: 'white'}}>Rating: {values.timeManagement}</Text>
             </View>
             
-            <View style={styles.sections}>
-              <Text style={styles.label}>Overall Experience</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Overall Experience</Text>
               <Slider
                 minimumValue={0}
                 maximumValue={5}
@@ -352,29 +357,29 @@ const FeedbackForm = () => {
               <Text style={{color: 'white'}}>Rating: {values.overallExperience}</Text>
             </View>
             
-            <View style={styles.sections}>
-              <Text style={styles.label}>Additional Feedback</Text>
+            <View style={formStyles.sections}>
+              <Text style={formStyles.label}>Additional Feedback</Text>
               <TextInput
-                style={styles.input}
+                style={formStyles.input}
                 onChangeText={handleChange('additionalFeedback')}
                 // onBlur={handleBlur('additionalFeedback')}
                 value={values.additionalFeedback}
               />
               {touched.additionalFeedback && errors.additionalFeedback && (
-                <Text style={styles.error}>{errors.additionalFeedback}</Text>
+                <Text style={formStyles.error}>{errors.additionalFeedback}</Text>
               )}
             </View>
 
             <View >
               <TouchableOpacity
-                style={ isValid? styles.button : styles.disabledButton}
+                style={ isValid? formStyles.button : formStyles.disabledButton}
                 onPress={()=> {
                   onSubmit(values);
                   handleReset();
                 }}
                 disabled={!isValid}
               >
-                <Text style={ isValid? styles.buttonText : styles.disabledButtonText}>SUBMIT</Text>
+                <Text style={ isValid? formStyles.buttonText : formStyles.disabledButtonText}>SUBMIT</Text>
               </TouchableOpacity>
             </View>
 
@@ -385,109 +390,110 @@ const FeedbackForm = () => {
   );
 };
 
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#121212', 
-      padding: 16,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    sections: {
-      marginTop: 10,
-      marginBottom: 20,
-      borderBottomColor: "#8B8000",
-      borderBottomWidth: 1,
-      width: 350
-    },
-    input: {
-      width: 350, 
-      height: 48, 
-      borderColor: '#333', 
-      borderWidth: 1,
-      borderRadius: 8, 
-      marginBottom: 16, 
-      paddingHorizontal: 12, 
-      fontSize: 16, 
-      backgroundColor: '#1e1e1e', 
-      color: '#fff', 
-    },
-    label: {
-      fontSize: 18, 
-      fontWeight: '600', 
-      marginBottom: 8, 
-      color: '#ffffff', 
-    },
-    error: {
-      color: '#ff6b6b', 
-      fontSize: 14, 
-      marginBottom: 12,
-      textAlign: 'center', 
-    },
-    radioOption: {
-      fontSize: 16,
-      color: '#bbb', 
-    },
-    radioContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-    radioCircle: {
-      height: 24,
-      width: 24,
-      borderRadius: 12,
-      borderWidth: 2,
-      borderColor: '#FFC107', // Yellow border
-      alignItems: 'center',
-      justifyContent: 'center',
-      marginRight: 10,
-    },
-    radioCircleFilled: {
-      height: 12,
-      width: 12,
-      borderRadius: 6,
-      backgroundColor: '#FFC107', // Yellow fill for selected
-    },
-    checkboxContainter: {
-      backgroundColor: 'transparent',
-      alignItems: 'flex-start',
-    },
+
+// const formStyles = formStylesheet.create({
+//     container: {
+//       flex: 1,
+//       backgroundColor: '#121212', 
+//       padding: 16,
+//       justifyContent: 'center',
+//       alignItems: 'center',
+//     },
+//     sections: {
+//       marginTop: 10,
+//       marginBottom: 20,
+//       borderBottomColor: "#8B8000",
+//       borderBottomWidth: 1,
+//       width: 350
+//     },
+//     input: {
+//       width: 350, 
+//       height: 48, 
+//       borderColor: '#333', 
+//       borderWidth: 1,
+//       borderRadius: 8, 
+//       marginBottom: 16, 
+//       paddingHorizontal: 12, 
+//       fontSize: 16, 
+//       backgroundColor: '#1e1e1e', 
+//       color: '#fff', 
+//     },
+//     label: {
+//       fontSize: 18, 
+//       fontWeight: '600', 
+//       marginBottom: 8, 
+//       color: '#ffffff', 
+//     },
+//     error: {
+//       color: '#ff6b6b', 
+//       fontSize: 14, 
+//       marginBottom: 12,
+//       textAlign: 'center', 
+//     },
+//     radioOption: {
+//       fontSize: 16,
+//       color: '#bbb', 
+//     },
+//     radioContainer: {
+//       flexDirection: 'row',
+//       alignItems: 'center',
+//       marginBottom: 10,
+//     },
+//     radioCircle: {
+//       height: 24,
+//       width: 24,
+//       borderRadius: 12,
+//       borderWidth: 2,
+//       borderColor: '#FFC107', // Yellow border
+//       alignItems: 'center',
+//       justifyContent: 'center',
+//       marginRight: 10,
+//     },
+//     radioCircleFilled: {
+//       height: 12,
+//       width: 12,
+//       borderRadius: 6,
+//       backgroundColor: '#FFC107', // Yellow fill for selected
+//     },
+//     checkboxContainter: {
+//       backgroundColor: 'transparent',
+//       alignItems: 'flex-start',
+//     },
     
-    button: {
-      backgroundColor: '#FFC107',
-      paddingVertical: 12,
-      borderRadius: 8,
-      alignItems: 'center',
-      // marginTop: ,
-      width: 200,
-      shadowColor: '#000',
-      shadowOpacity: 0.2,
-      shadowOffset: { width: 0, height: 2 },
-      shadowRadius: 4,
-      elevation: 3,
-  },
-  buttonText: {
-      color: '#121212',
-      fontSize: 18,
-      fontWeight: 'bold',
-  },
-  disabledButton: {
-      backgroundColor: '#555555',
-      paddingVertical: 12,
-      borderRadius: 8,
-      alignItems: 'center',
-      marginTop: 16,
-      width: 200,
-      shadowColor: 'transparent',
-      elevation: 0,
-  },
-  disabledButtonText: {
-      color: '#a1a1a1',
-      fontSize: 18,
-      fontWeight: 'bold',
-  },
-});
+//     button: {
+//       backgroundColor: '#FFC107',
+//       paddingVertical: 12,
+//       borderRadius: 8,
+//       alignItems: 'center',
+//       // marginTop: ,
+//       width: 200,
+//       shadowColor: '#000',
+//       shadowOpacity: 0.2,
+//       shadowOffset: { width: 0, height: 2 },
+//       shadowRadius: 4,
+//       elevation: 3,
+//   },
+//   buttonText: {
+//       color: '#121212',
+//       fontSize: 18,
+//       fontWeight: 'bold',
+//   },
+//   disabledButton: {
+//       backgroundColor: '#555555',
+//       paddingVertical: 12,
+//       borderRadius: 8,
+//       alignItems: 'center',
+//       marginTop: 16,
+//       width: 200,
+//       shadowColor: 'transparent',
+//       elevation: 0,
+//   },
+//   disabledButtonText: {
+//       color: '#a1a1a1',
+//       fontSize: 18,
+//       fontWeight: 'bold',
+//   },
+// });
 
 
 export default FeedbackForm;
