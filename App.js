@@ -8,34 +8,29 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
-// const obj = {
-//   List:(focused) => focused ? 'list' : 'list-outline',
-
-
-// }
-
 export default function App() {
+  const getRouteIcons = ({focused, color, size, route}) => {
+    let iconName;
+    if (route.name === 'List') {
+      iconName = focused ? 'list' : 'list-outline';
+    } else if (route.name === 'FeedbackForm') {
+      iconName = focused ? 'create' : 'create-outline';
+    } else if (route.name === 'Settings') {
+      iconName = focused ? 'settings' : 'settings-outline';
+    }
+    return <Ionicons name={iconName} size={size} color={color} />;
+  };
+
   return (
     <NavigationContainer>
       <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarIcon: ({focused, color, size}) => {
-          let iconName;
-          if (route.name === 'List') {
-            iconName = focused ? 'list' : 'list-outline';
-          } else if (route.name === 'FeedbackForm') {
-            iconName = focused ? 'create' : 'create-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
-          }
-
-          // obj[route.name]
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: 'green',
-        tabBarInactiveTintColor: 'gray',
-      })}
-      >
+        screenOptions={({route}) => ({
+          tabBarIcon: ({focused, color, size}) => {
+            getRouteIcons({focused, color, size, route});
+          },
+          tabBarActiveTintColor: 'green',
+          tabBarInactiveTintColor: 'gray',
+        })}>
         <Tab.Screen name="List" component={List} />
         <Tab.Screen name="FeedbackForm" component={FeedbackForm} />
         <Tab.Screen name="Settings" component={Settings} />

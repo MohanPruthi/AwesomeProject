@@ -42,21 +42,15 @@ export const removeTable = async (db, tableName) => {
   }
 };
 
-export const removeItemFromTable = async (db, id) => {        //todo
+export const removeItemFromTable = async (db, id) => {
   const query = `DELETE FROM feedback WHERE id = ${id}`;
   try {
     await db.executeSql(query);
-    console.log(`Feedback item with id ${id} removed successfully.`);
   } catch (error) {
-    console.error(`Failed to remove feedback item with id ${id}:`, error);
     throw Error(`Failed to remove feedback item with id ${id}`);
   }
 };
 
-
-
-
-// Function to create the feedback table if it doesn't exist
 export const createTable = async db => {
   const query = `
     CREATE TABLE IF NOT EXISTS feedback (
@@ -83,10 +77,8 @@ export const createTable = async db => {
   await db.executeSql(query);
 };
 
-// Function to insert the feedback into the table
 export const insertFeedback = async (db, feedback) => {
-  const collaborationAspectsStr = feedback.collaborationAspects.join(','); // Convert array to comma-separated string
-
+  const collaborationAspectsStr = feedback.collaborationAspects.join(',');
   const query = `
     INSERT INTO feedback (
       firstName, lastName, email, phoneNumber, employeeType, projectName,
@@ -118,18 +110,11 @@ export const insertFeedback = async (db, feedback) => {
   await db.executeSql(query, values);
 };
 
-// Function to get all feedback from the feedback table
 export const getFeedback = async () => {
   const db = await connectToDatabase();
-
   try {
-    // Query to fetch all feedback records
     const result = await db.executeSql('SELECT * FROM feedback');
-
-    // The result is in an array of rows, so we map over it to extract the data
-    const feedbackList = result[0].rows.raw(); // This will return all rows as an array
-
-    console.log('Feedback List:', feedbackList);
+    const feedbackList = result[0].rows.raw();
     return feedbackList;
   } catch (error) {
     console.error('Error retrieving feedback:', error);
