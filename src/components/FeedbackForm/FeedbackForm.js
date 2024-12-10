@@ -11,7 +11,7 @@ import {
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {useSelector, useDispatch} from 'react-redux';
-import {addToList, setList} from '../../slices/FormSlice';
+import {addToList, setList, setEditing} from '../../slices/FormSlice';
 import {Slider, CheckBox} from '@rneui/themed';
 import {connectToDatabase, createTable, insertFeedback, getFeedback} from '../../db/db';
 
@@ -43,48 +43,78 @@ const FeedbackForm = () => {
   console.log(editing + " " + index)
 
   const onSubmit = (values) => {
-
     console.log(values, 'value');
-
-    if(editing){
-      // find the index in redux (list) and update the value OR make a slice setUpdate function
-
-      
+  
+    if (editing) {
+      // Update Redux
+      const updatedList = [...list];
+      updatedList[index] = values; // Replace the item at the specified index
+      dispatch(setList(updatedList)); // Update the Redux list
+      dispatch(setEditing(false)); // Exit editing mode
+  
+      // Update SQLite
+      const updateFeedback = async () => {
+        const db = await connectToDatabase();
+  
+        // Assume an `id` field exists for identifying rows in the database
+        const feedbackId = list[index]?.id;
+        if (!feedbackId) {
+          console.error('Error: Feedback ID is missing.');
+          return;
+        }
+  
+        const query = `
+          UPDATE feedback 
+          SET 
+            firstName = ?, lastName = ?, email = ?, phoneNumber = ?, 
+            employeeType = ?, projectName = ?, teamCollaboration = ?, 
+            collaborationAspects = ?, challengesFaced = ?, challengesDescription = ?, 
+            timeManagement = ?, delayDescription = ?, projectObjectiveAchieved = ?, 
+            improvementSuggestions = ?, overallExperience = ?, additionalFeedback = ?
+          WHERE id = ?`;
+  
+        const params = [
+          values.firstName,
+          values.lastName,
+          values.email,
+          values.phoneNumber,
+          values.employeeType,
+          values.projectName,
+          values.teamCollaboration,
+          JSON.stringify(values.collaborationAspects), // Convert array to string
+          values.challengesFaced,
+          values.challengesDescription,
+          values.timeManagement,
+          values.delayDescription,
+          values.projectObjectiveAchieved,
+          values.improvementSuggestions,
+          values.overallExperience,
+          values.additionalFeedback,
+          feedbackId, // Bind the ID for the WHERE clause
+        ];
+  
+        await db.executeSql(query, params);
+      };
+  
+      updateFeedback().catch((error) => {
+        console.error('Error updating feedback:', error);
+      });
+    } else {
+      // New Entry Logic (Already Implemented)
+      const saveFeedback = async () => {
+        const db = await connectToDatabase();
+        await createTable(db);
+        await insertFeedback(db, values);
+      };
+  
+      saveFeedback().catch((error) => {
+        console.error('Error saving feedback:', error);
+      });
+  
+      dispatch(addToList(values)); // Add the new feedback to Redux
     }
-
-    const saveFeedback = async () => {          //push to sql lite
-      const db = await connectToDatabase();
-
-      await createTable(db);
-
-      await insertFeedback(db, values);
-    };
-
-    saveFeedback().catch(error => {
-      console.error('Error saving feedback:', error);
-    });
-
-    dispatch(addToList(values));        // push to redux array
-
-    // setList({                       // reset the form
-    //   firstName: '',
-    //   lastName: '',
-    //   email: '',
-    //   phoneNumber: '',
-    //   employeeType: '',
-    //   projectName: '',
-    //   teamCollaboration: '',
-    //   collaborationAspects: [],
-    //   challengesFaced: '',
-    //   challengesDescription: '',
-    //   timeManagement: 0,
-    //   delayDescription: '',
-    //   projectObjectiveAchieved: '',
-    //   improvementSuggestions: '',
-    //   overallExperience: 0,
-    //   additionalFeedback: '',
-    // });
-  }; 
+  };
+  
   console.log("rerender from")
   useEffect(() => {
     // write logic to rerender the page based on editing
@@ -114,7 +144,10 @@ const FeedbackForm = () => {
         validationSchema={FeedbackSchema}
         validateOnChange={true}
         enableReinitialize={true}
-        onSubmit={onSubmit}
+        onSubmit={(values, { resetForm }) => {
+          onSubmit(values); // Your custom submit logic
+          resetForm(); // Reset the form fields
+        }}
         >
         {({
           values,
@@ -380,13 +413,12 @@ const FeedbackForm = () => {
             <View >
               <TouchableOpacity
                 style={ isValid? formStyles.button : formStyles.disabledButton}
-                onPress={()=> {
-                  onSubmit(values);
-                  handleReset();
-                }}
+                onPress={handleSubmit}
                 disabled={!isValid}
               >
-                <Text style={ isValid? formStyles.buttonText : formStyles.disabledButtonText}>SUBMIT</Text>
+                <Text style={isValid ? formStyles.buttonText : formStyles.disabledButtonText}>
+                  {editing ? "UPDATE" : "SUBMIT"}
+                </Text>
               </TouchableOpacity>
             </View>
 
